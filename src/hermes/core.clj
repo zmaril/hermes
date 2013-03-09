@@ -24,6 +24,10 @@
                                          (TitanFactory/open m)
                                          (TitanFactory/open (convert-config-map m)))))))
 
+(defn shutdown 
+  "Shutdown the graph."
+  [] (alter-var-root (var *graph*) (fn [m] (.shutdown m))))
+
 (defn get-features
   "Get a map of features for a graph.
   (http://tinkerpop.com/docs/javadocs/blueprints/2.1.0/com/tinkerpop/blueprints/Features.html)"

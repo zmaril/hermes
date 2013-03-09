@@ -10,7 +10,7 @@ A Clojure library designed to make it easy to work with
 started, add this dependency to your `project.clj`:
 
 ``` clojure
-[hermes "0.2.6"]
+[hermes "0.2.7"]
 ```
 
 Take a look at [the wiki](https://github.com/gameclosure/hermes/wiki)
@@ -30,11 +30,11 @@ take advantage of whatever the Titan team puts out.
 
 # License
 
-Copyright © 2012 Game Closure
+Copyright © 2013 Zack Maril
 
 Distributed under the MIT license. 
 
 # Contact
 
-Yell at Zack, via [twitter](http://www.twitter.com/ZackMaril) and/or
-[email](mailto:zack@gameclosure.com), if Hermes breaks. 
+Via [twitter](http://www.twitter.com/ZackMaril) or
+[email](mailto:zack@zacharymaril.com)

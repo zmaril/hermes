@@ -1,35 +1,32 @@
 (ns hermes.persistent.core-test
   (:use clojure.test
-        [hermes.persistent.conf :only (conf)])
+        [hermes.persistent.conf :only (conf clear-db)])
   (:require [hermes.core :as g]
             [hermes.type :as t]
             [hermes.vertex :as v])
   (:import  (com.thinkaurelius.titan.graphdb.database   StandardTitanGraph)
             (com.thinkaurelius.titan.graphdb.vertices   PersistStandardTitanVertex)))
 
+(deftest test-open-conf
+  (clear-db)
+  (g/open conf))
+
 (deftest test-opening-a-graph-with-conf
   (testing "Stored graph"
-    (println "Make sure Cassandra is up and running locally.")
-    (println "Be careful with types! They don't get removed or rewritten ever. ")
-    (println "When you are doing the persistent tests, always be on the look out.")
-    (g/open conf)
     (is (= (type g/*graph*)
            StandardTitanGraph))))
 
 (deftest test-simple-transaction
   (testing "Stored graph"
-    (g/open conf)
     (let [vertex (g/transact! (.addVertex g/*graph*))]      
       (is (= PersistStandardTitanVertex (type vertex))))))
 
 (deftest test-transaction-ensuring
   (testing "Stored graph"
-    (g/open conf)
     (is (thrown? Throwable #"transact!" (v/create!)))))
 
 (deftest test-dueling-transactions
   (testing "Without retries"
-    (g/open conf)
     (g/transact!
       (t/create-vertex-key-once :vertex-id Long {:indexed true
                                                  :unique true}))
@@ -60,7 +57,6 @@
         "*graph* has only one vertex with the specified vertex-id")))
 
   (testing "With retries and an exponential backoff function"
-    (g/open conf)
     (g/transact!
       (t/create-vertex-key-once :vertex-id Long {:indexed true
                                                  :unique true}))
@@ -78,3 +74,7 @@
       (is (= 1 (count
         (g/transact! (v/find-by-kv :vertex-id random-long))))
         "*graph* has only one vertex with the specified vertex-id"))))
+
+(deftest test-close-conf
+  (g/shutdown)
+  (clear-db)) 
