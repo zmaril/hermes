@@ -1,4 +1,4 @@
-(ns hermes.memory.kryo
+(ns hermes.kryo-test
   (:use [clojure.test])
   (:require [hermes.core :as g]
             [hermes.edge :as e]

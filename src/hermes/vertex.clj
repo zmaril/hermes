@@ -68,5 +68,5 @@
   "Delete a vertex."
   ([vertex]
      (ensure-graph-is-transaction-safe)
-     (.removeVertex *graph* vertex)))
+     (.remove vertex)))
 

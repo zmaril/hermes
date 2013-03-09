@@ -5,7 +5,7 @@
             [hermes.type :as t]
             [hermes.vertex :as v])
   (:import  (com.thinkaurelius.titan.graphdb.database   StandardTitanGraph)
-            (com.thinkaurelius.titan.graphdb.vertices   PersistStandardTitanVertex)))
+            (com.thinkaurelius.titan.graphdb.vertices   StandardVertex)))
 
 (deftest test-opening-a-graph-with-conf
   (testing "Stored graph"
@@ -20,7 +20,7 @@
   (testing "Stored graph"
     (g/open conf)
     (let [vertex (g/transact! (.addVertex g/*graph*))]      
-      (is (= PersistStandardTitanVertex (type vertex))))))
+      (is (= StandardVertex (type vertex))))))
 
 (deftest test-transaction-ensuring
   (testing "Stored graph"

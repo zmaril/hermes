@@ -1,6 +1,7 @@
 (ns hermes.type
   (:import (com.thinkaurelius.titan.core TypeGroup
-                                         TitanType))
+                                         TitanType)
+           (com.tinkerpop.blueprints Direction Vertex))
   (:use [hermes.core :only (*graph* ensure-graph-is-transaction-safe)]))
 
 (defn get-type [tname]
@@ -58,8 +59,10 @@
                          indexed false}}]
      (let [type-maker (.. (create-type-maker name m)
                           (dataType data-type))]
-       (when unique (.unique type-maker))
-       (when indexed (.indexed type-maker))
+        ;; TODO: HACK, how does this work now?
+;;       (.unique type-maker nil)             
+       ;;TODO How does indexing work now?
+;;       (.indexed type-maker Vertex)
        (.makePropertyKey type-maker))))
 
 (defn create-edge-label-once

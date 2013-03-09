@@ -1,8 +1,8 @@
 (ns hermes.core
   (:import (com.thinkaurelius.titan.core TitanFactory)
            (com.tinkerpop.blueprints Element TransactionalGraph TransactionalGraph$Conclusion)
-           (com.thinkaurelius.titan.graphdb.blueprints TitanInMemoryBlueprintsGraph)
-           (com.thinkaurelius.titan.graphdb.transaction StandardPersistTitanTx)
+;;           (com.thinkaurelius.titan.graphdb.blueprints TitanInMemoryBlueprintsGraph)
+           (com.thinkaurelius.titan.graphdb.transaction StandardTitanTx)
            (org.apache.commons.configuration BaseConfiguration)))
 
 (def ^{:dynamic true} *graph*)
@@ -17,13 +17,16 @@
     conf))
 
 (defn open
-  "Open a graph.  If no configuration is supplied an in-memory graph is opened."
-  ([ ] (alter-var-root (var *graph*) (fn [_] (TitanFactory/openInMemoryGraph))))
-  ([m] (alter-var-root (var *graph*) (fn [_]
-                                       (if (string? m)
-                                         (TitanFactory/open m)
-                                         (TitanFactory/open (convert-config-map m)))))))
-
+  "Open a graph with a given configuration." [m]
+  (alter-var-root (var *graph*) (fn [_]
+                                  (if (string? m)
+                                    (TitanFactory/open m)
+                                    (TitanFactory/open (convert-config-map m))))))
+(defn close
+  "Close the currently opened graph."[]
+  (alter-var-root (var *graph*) (fn [g]
+                                  (.shutdown g)
+                                  nil)))
 (defn get-features
   "Get a map of features for a graph.
   (http://tinkerpop.com/docs/javadocs/blueprints/2.1.0/com/tinkerpop/blueprints/Features.html)"
@@ -38,7 +41,7 @@
 (defn- transact!* [f]
   (if (get-feature "supportsTransactions")
     (try
-      (let [tx      (.startTransaction *graph*)
+      (let [tx      (.newTransaction *graph*)
             results (binding [*graph* tx] (f))]
         (.commit tx)
         (.stopTransaction *graph* TransactionalGraph$Conclusion/SUCCESS)
@@ -84,7 +87,7 @@
 
 (defn ensure-graph-is-transaction-safe []
   "Ensure that we are either in a transaction or using an in-memory graph."
-  (when-not (#{TitanInMemoryBlueprintsGraph StandardPersistTitanTx}
+  (when-not (#{StandardTitanTx}
               (type *graph*))
     (throw
       (Throwable.

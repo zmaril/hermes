@@ -30,7 +30,7 @@ take advantage of whatever the Titan team puts out.
 
 # License
 
-Copyright © 2012 Game Closure
+Copyright © 2013 Zack Maril
 
 Distributed under the MIT license. 
 
