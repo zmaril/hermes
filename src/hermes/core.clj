@@ -18,11 +18,10 @@
 
 (defn open
   "Open a graph.  If no configuration is supplied an in-memory graph is opened."
-  ([ ] (alter-var-root (var *graph*) (fn [_] (TitanFactory/openInMemoryGraph))))
-  ([m] (alter-var-root (var *graph*) (fn [_]
-                                       (if (string? m)
-                                         (TitanFactory/open m)
-                                         (TitanFactory/open (convert-config-map m)))))))
+  [m] (alter-var-root (var *graph*) (fn [_]
+                                      (if (string? m)
+                                        (TitanFactory/open m)
+                                        (TitanFactory/open (convert-config-map m))))))
 
 (defn shutdown 
   "Shutdown the graph."

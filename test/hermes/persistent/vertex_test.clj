@@ -5,9 +5,10 @@
             [hermes.vertex :as v]
             [hermes.type :as t]))
 
+;;TODO Figure out why these have to go in separte places compared to
+;;the edge_test.clj file
 (clear-db)
 (g/open conf)
-
 (g/transact!
  (t/create-vertex-key-once :name String {:indexed true})
  (t/create-vertex-key-once :age Long {:indexed true})
