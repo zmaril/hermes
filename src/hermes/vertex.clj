@@ -9,21 +9,24 @@
 ;;Information getters
 ;;
 
-(defn prop-map [vertex]
+(defn prop-map
   "Returns a Persistent map representing the edge"
+  [vertex]
   (into {:__id__ (get-id vertex)}
         (map #(vector (keyword %) (get-property vertex %)) (get-keys vertex))))
 
-(defn find-by-id [& ids]
+(defn find-by-id
   "Retrieves nodes by id from the graph."
+  [& ids]
   (ensure-graph-is-transaction-safe)
   (if (= 1 (count ids))
     (.getVertex *graph* (first ids))
     (seq (for [id ids] (.getVertex *graph* id)))))
 
-(defn find-by-kv [k v]
+(defn find-by-kv
   "Given a key and a value, returns the set of all vertices that
    sastify the pair."
+  [k v]
   (ensure-graph-is-transaction-safe)
   (set (.getVertices *graph* (name k) v)))
 
@@ -31,8 +34,9 @@
 ;; Transaction management
 ;;
 
-(defn refresh [vertex]
+(defn refresh
   "Gets a vertex back from the database and refreshes it to be usable again."
+  [vertex]
   (ensure-graph-is-transaction-safe)
   (.getVertex *graph* vertex))
 
