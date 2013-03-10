@@ -60,6 +60,16 @@
          (doseq [vertex vertices] (set-properties! vertex m))
          vertices))))
 
+(defn unique-upsert! [& args]
+  (let [upserted (apply upsert! args)]
+    (if (= 1 (count upserted))
+      (first upserted)
+      (throw (Throwable.
+              (str
+               "Don't call unique-upsert! when there is more than one element returned.\n"
+               "There were " (count upserted) " vertices returned.\n"
+               "The arguments were: " args "\n"))))))
+
 ;;
 ;; Deletion methods
 ;;

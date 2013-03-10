@@ -14,9 +14,7 @@
    (t/create-vertex-key-once :first-name String {:indexed true})
    (t/create-vertex-key-once :last-name String {:indexed true}))
   
-  (testing "Deletion of vertices"
-
-    
+  (testing "Deletion of vertices"    
     (g/transact!
      (let [u (v/create! {:vname "uniquevname"})
            u-id (v/get-id u)]
@@ -91,5 +89,20 @@
               (v/get-property (v/refresh (first v1-a)) :heritage)
               (v/get-property (v/refresh (first v1-b)) :heritage)
               (v/get-property (v/refresh (first v2)) :heritage))))))
+
+  (testing "Unique upsert!"
+    (g/transact!
+     (let [v1-a (v/unique-upsert! :first-name
+                                  {:first-name "Zack" :last-name "Maril" :age 21})
+           v1-b (v/unique-upsert! :first-name
+                                  {:first-name "Zack" :last-name "Maril" :age 22})
+           v2   (v/unique-upsert! :first-name
+                                  {:first-name "Brooke" :last-name "Maril" :age 19})]
+       (is (= 22
+              (v/get-property (v/refresh v1-a) :age)
+              (v/get-property (v/refresh v1-b) :age)))       
+       (is (thrown? Throwable #"There were 2 vertices returned."
+                    (v/unique-upsert! :last-name {:last-name "Maril"}))))))
+  
   (g/shutdown)
   (clear-db))
