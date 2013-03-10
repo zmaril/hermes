@@ -36,28 +36,20 @@
    (.getVertex this Direction/IN)])
 
 (defn edges-between
-  "Returns a set of the edges between two vertices."
+  "Returns a set of the edges between two vertices, direction considered."
   ([v1 v2] (edges-between v1 v2 nil))
   ([v1 v2 label]
      (ensure-graph-is-transaction-safe)
      ;; Source for these edge queries:
      ;; https://groups.google.com/forum/?fromgroups=#!topic/gremlin-users/R2RJxJc1BHI
-     (let [set-1
-           (q/query v1
-                    (q/--E> label)
-                    q/in-vertex
-                    (q/has "id" (.getId v2))
-                    (q/back 2)
-                    (q/to-list))
-           set-2
-           (q/query v2
-                    (q/--E> label)
-                    q/in-vertex
-                    (q/has "id" (.getId v1))
-                    (q/back 2)
-                    (q/to-list))]
-       (println set-1 set-2)
-       (set (concat set-1 set-2)))))
+     (let [edges-set (q/query v1
+                              (q/--E> label)
+                              q/in-vertex
+                              (q/has "id" (.getId v2))
+                              (q/back 2)
+                              (q/to-list))]
+       (when (not (empty? edges-set))
+         edges-set))))
 
 (defn connected?
   "Returns whether or not two vertices are connected. Optional third

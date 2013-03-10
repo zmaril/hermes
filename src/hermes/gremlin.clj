@@ -1,4 +1,4 @@
-(ns hermes.ogre
+(ns hermes.gremlin
   (:import (com.tinkerpop.gremlin.java GremlinPipeline)
            (com.tinkerpop.gremlin Tokens$T)))
 

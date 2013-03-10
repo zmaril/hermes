@@ -50,9 +50,27 @@
     (g/transact!
      (let [v1 (v/create! {:name "v1"})
            v2 (v/create! {:name "v2"})
-           edge (first (e/upconnect! v1 v2 "connexion"))]
+           edge (e/connect! v1 v2 "connexion")]
        (is (= ["v1" "v2"] (map #(e/get-property % :name) (e/endpoints edge)))))))
 
+  (testing "Refresh"
+    (let [v1 (g/transact! (v/create! {:name "v1"}))
+          v2 (g/transact! (v/create! {:name "v2"}))
+          edge (g/transact! (e/connect! (v/refresh v1) (v/refresh v2) "connexion"))
+          fresh-edge (g/transact! (e/refresh edge))]
+      (is fresh-edge)
+      (is (g/transact! (= (.getId (e/refresh edge)) (.getId (e/refresh fresh-edge)))))
+      (is (g/transact! (= (e/prop-map (e/refresh edge)) (e/prop-map (e/refresh fresh-edge)))))))
+
+  (testing "Edges between"
+    (let [v1 (g/transact! (v/create! {:name "v1"}))
+          v2 (g/transact! (v/create! {:name "v2"}))
+          edge (g/transact! (e/connect! (v/refresh v1) (v/refresh v2) "connexion"))
+          found-edges (g/transact! (e/edges-between (v/refresh v1) (v/refresh v2)))]
+      (is edge)
+      (is (g/transact! (= (e/prop-map (e/refresh edge))
+                          (e/prop-map (e/refresh (first found-edges))))))))
+  
   (testing "Upconnect!"
     (testing "Upconnecting once"
       (g/transact!
@@ -105,29 +123,5 @@
          (e/connect! v1 v2 "connexion")
          (is (thrown? Throwable #"There were 2 vertices returned."
                       (e/unique-upconnect! v1 v2 "connexion")))))))
-
-  
-
-  
-
-  (testing "Refresh"
-    (let [v1 (g/transact! (v/create! {:name "v1"}))
-          v2 (g/transact! (v/create! {:name "v2"}))
-          edge (g/transact! (first (e/upconnect! (v/refresh v1) (v/refresh v2) "connexion")))
-          fresh-edge (g/transact! (e/refresh edge))]
-
-      (is fresh-edge)
-      (is (g/transact! (= (.getId (e/refresh edge)) (.getId (e/refresh fresh-edge)))))
-      (is (g/transact! (= (e/prop-map (e/refresh edge)) (e/prop-map (e/refresh fresh-edge)))))))
-
-  (testing "Edges between"
-    (let [v1 (g/transact! (v/create! {:name "v1"}))
-          v2 (g/transact! (v/create! {:name "v2"}))
-          edge (g/transact! (e/upconnect! (v/refresh v1) (v/refresh v2) "connexion"))
-          found-edges (g/transact! (e/edges-between (v/refresh v1) (v/refresh v2)))]
-
-      (is edge)
-      (is (g/transact! (= (e/prop-map (e/refresh (first edge)))
-                          (e/prop-map (e/refresh (first found-edges))))))))
   (g/shutdown)
   (clear-db))
