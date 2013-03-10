@@ -2,18 +2,19 @@
   (:import (com.tinkerpop.blueprints Edge Direction)
            (com.tinkerpop.gremlin.java GremlinPipeline))
   (:require [hermes.vertex :as v]
-            [hermes.type   :as t])
+            [hermes.type   :as t]
+            [hermes.gremlin :as q])  
   (:use [hermes.core :only (*graph* transact! ensure-graph-is-transaction-safe)]
-        [hermes.util :only (immigrate)]
-        [hermes.gremlin :only (query)]))
+        [hermes.util :only (immigrate)]))
 
 (immigrate 'hermes.element)
 
 ;;
 ;;Information getters
 ;;
-(defn find-by-id [& ids]
+(defn find-by-id
   "Retrieves nodes by id from the graph."
+  [& ids]
   (ensure-graph-is-transaction-safe)
   (if (= 1 (count ids))
     (.getEdge *graph* (first ids))
@@ -39,15 +40,24 @@
   ([v1 v2] (edges-between v1 v2 nil))
   ([v1 v2 label]
      (ensure-graph-is-transaction-safe)
-     (when-let [edges
-              ;; Source for this edge query:
-              ;; https://groups.google.com/forum/?fromgroups=#!topic/gremlin-users/R2RJxJc1BHI
-                (query v1
-                     (outE (into-array String (if label [label] [])))
-                     inV
-                     (has "id" (.getId v2))
-                     (back 2))]
-       edges)))
+     ;; Source for these edge queries:
+     ;; https://groups.google.com/forum/?fromgroups=#!topic/gremlin-users/R2RJxJc1BHI
+     (let [set-1
+           (q/query v1
+                    (q/--E> label)
+                    q/in-vertex
+                    (q/has "id" (.getId v2))
+                    (q/back 2)
+                    (q/to-list))
+           set-2
+           (q/query v2
+                    (q/--E> label)
+                    q/in-vertex
+                    (q/has "id" (.getId v1))
+                    (q/back 2)
+                    (q/to-list))]
+       (println set-1 set-2)
+       (set (concat set-1 set-2)))))
 
 (defn connected?
   "Returns whether or not two vertices are connected. Optional third
@@ -55,13 +65,14 @@
   ([v1 v2] (connected? v1 v2 nil))  
   ([v1 v2 label]     
      (ensure-graph-is-transaction-safe)
-     (boolean (edges-between v1 v2 label))))
+     (not (empty? (edges-between v1 v2 label)))))
 ;;
 ;;Transaction management
 ;;
 
-(defn refresh [edge]
+(defn refresh
   "Goes and grabs the edge from the graph again. Useful for \"refreshing\" stale edges."
+  [edge]
   (ensure-graph-is-transaction-safe)
   (.getEdge *graph* (.getId edge)))
 
