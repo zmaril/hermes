@@ -47,11 +47,12 @@
      (ensure-graph-is-transaction-safe)
      (set-properties! (.addVertex *graph*) data)))
 
-(defn upsert! [k m]
+(defn upsert!
   "Given a key and a property map, upsert! either creates a new node
    with that property map or updates all nodes with the given key
    value pair to have the new properties specifiied by the map. Always
    returns the set of vertices that were just update or created."
+  [k m]
   (ensure-graph-is-transaction-safe)
    (let [vertices (find-by-kv (name k) (k m))]
      (if (empty? vertices)
@@ -60,7 +61,9 @@
          (doseq [vertex vertices] (set-properties! vertex m))
          vertices))))
 
-(defn unique-upsert! [& args]
+(defn unique-upsert!
+  "Like upsert!, but throws an error when more than one element is returned."
+  [& args]
   (let [upserted (apply upsert! args)]
     (if (= 1 (count upserted))
       (first upserted)

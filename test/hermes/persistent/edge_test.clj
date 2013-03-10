@@ -78,6 +78,38 @@
          (is (= 1 (e/get-property edge :a)))
          (is (= 0 (e/get-property edge :b)))))))
 
+  (testing "unique-upconnect!"
+    (testing "Once"
+      (g/transact!
+       (let [v1 (v/create! {:name "v1"})
+             v2 (v/create! {:name "v2"})
+             edge (e/unique-upconnect! v1 v2 "connexion" {:prop "the edge"})]
+         (is (e/connected? v1 v2))
+         (is (e/connected? v1 v2 "connexion"))
+         (is (not (e/connected? v2 v1)))
+         (is (= "the edge" (e/get-property edge :prop))))))
+
+    (testing "Multiple times"
+      (g/transact!
+       (let [v1 (v/create! {:name "v1"})
+             v2 (v/create! {:name "v2"})
+             edge (e/unique-upconnect! v1 v2 "connexion" {:prop "the edge"})
+             edge (e/unique-upconnect! v1 v2 "connexion" {:a 1 :b 2})
+             edge (e/unique-upconnect! v1 v2 "connexion" {:b 0})]
+         (is (e/connected? v1 v2))
+         (is (e/connected? v1 v2 "connexion"))
+         (is (not (e/connected? v2 v1)))
+         (is (= "the edge" (e/get-property edge :prop)))
+         (is (= 1 (e/get-property edge :a)))
+         (is (= 0 (e/get-property edge :b)))
+         (e/connect! v1 v2 "connexion")
+         (is (thrown? Throwable #"There were 2 vertices returned."
+                      (e/unique-upconnect! v1 v2 "connexion")))))))
+
+  
+
+  
+
   (testing "Refresh"
     (let [v1 (g/transact! (v/create! {:name "v1"}))
           v2 (g/transact! (v/create! {:name "v2"}))

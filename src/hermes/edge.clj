@@ -92,6 +92,18 @@
          edges)
        #{(connect! v1 v2 label data)})))
 
+(defn unique-upconnect!
+  "Like upconnect!, but throws an error when more than element is returned."
+  [& args]
+  (let [upconnected (apply upconnect! args)]
+    (if (= 1 (count upconnected))
+      (first upconnected)
+      (throw (Throwable.
+              (str
+               "Don't call unique-upconnect! when there is more than one element returned.\n"
+               "There were " (count upconnected) " edges returned.\n"
+               "The arguments were: " args "\n"))))))
+
 ;;
 ;;Deletion methods
 ;;
