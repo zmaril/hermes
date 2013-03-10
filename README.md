@@ -16,7 +16,9 @@ started, add this dependency to your `project.clj`:
 Take a look at [the wiki](https://github.com/gameclosure/hermes/wiki)
 for information about Hermes and how to use the library. Try the
 [Quick Start](https://github.com/gameclosure/hermes/wiki/Quick-Start)
-page if you are in the mood for barrelling through an example.
+page if you are in the mood for barrelling through an example. The
+best opensource example of Hermes usage so far is
+[Bumi](https://github.com/zmaril/bumi).
 
 # Youth
 Titan is a young project and has just now barely hit 0.2. Hermes will probably
