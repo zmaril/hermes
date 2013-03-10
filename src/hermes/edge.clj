@@ -21,16 +21,21 @@
     (seq (for [id ids] (.getEdge *graph* id)))))
 
 
-(defn get-label [edge]
-  (.. edge getTitanLabel getName))
+(defn get-label
+  "Get the label of the edge"
+  [edge]
+  (keyword (.. edge getTitanLabel getName)))
 
-(defn prop-map [edge]
+(defn prop-map
+  "Get the property map of the edge"
+  [edge]
   (into {:__id__ (get-id edge)
          :__label__ (get-label edge)}
         (map #(vector (keyword %) (get-property edge %)) (get-keys edge))))
 
-(defn endpoints [this]
+(defn endpoints
   "Returns the endpoints of the edge in array with the order [starting-node,ending-node]."
+  [this]
   (ensure-graph-is-transaction-safe)
   [(.getVertex this Direction/OUT)
    (.getVertex this Direction/IN)])
@@ -74,10 +79,10 @@
 
 (defn connect!
   "Connects two vertices with the given label, and, optionally, with the given properties."
-  ([v1 v2 label] (connect! v1 v2 label {}))
-  ([v1 v2 label data]
+  ([v1 label v2] (connect! v1 (name label) v2 {}))
+  ([v1 label v2 data]
      (ensure-graph-is-transaction-safe)
-     (let [edge (.addEdge *graph* v1 v2 label)]
+     (let [edge (.addEdge *graph* v1 v2 (name label))]
        (set-properties! edge data)
        edge)))
 
@@ -86,14 +91,14 @@
    given label and, if the data is provided, merges the data with the
    current properties of the edge. If no such edge exists, then an
    edge is created with the given data."
-  ([v1 v2 label] (upconnect! v1 v2 label {}))
-  ([v1 v2 label data]
+  ([v1 label v2] (upconnect! v1 (name label) v2 {}))
+  ([v1 label v2 data]
      (ensure-graph-is-transaction-safe)
-     (if-let [edges (edges-between v1 v2 label)]
+     (if-let [edges (edges-between v1 v2 (name label))]
        (do
          (doseq [edge edges] (set-properties! edge data))
          edges)
-       #{(connect! v1 v2 label data)})))
+       #{(connect! v1 (name label) v2 data)})))
 
 (defn unique-upconnect!
   "Like upconnect!, but throws an error when more than element is returned."

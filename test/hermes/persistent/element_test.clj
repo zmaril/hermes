@@ -13,7 +13,7 @@
   (testing "Get keys"
     (g/transact! (let [a (v/create! {:name "v1" :a 1 :b 1})
                        b (v/create! {:name "v2" :a 1 :b 1})
-                       c (e/connect! a b  "test-label" {:prop "e1" :a 1 :b 1})
+                       c (e/connect! a :test-label b {:prop "e1" :a 1 :b 1})
                        coll-a (v/get-keys a)
                        coll-b (v/get-keys b)
                        coll-c (v/get-keys c)]
@@ -25,7 +25,7 @@
     (g/transact!
      (let [a (v/create!)
            b (v/create!)
-           c (e/connect! a b "test-label")]
+           c (e/connect! a :test-label b )]
        (is (= java.lang.Long (type (v/get-id a))))
        (is (= RelationIdentifier (type (e/get-id c)))))))
 
@@ -33,7 +33,7 @@
     (g/transact!
      (let [a (v/create! {:a 1})
            b (v/create!)
-           c (e/connect! a b "test-label" {:a 1})]
+           c (e/connect! a :test-label b {:a 1})]
        (v/remove-property! a :a)
        (v/remove-property! c :a)
        (is (nil? (:a (v/prop-map a))))
