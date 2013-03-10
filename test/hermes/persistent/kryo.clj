@@ -80,4 +80,6 @@
       (is (= d (g/transact! (v/get-property (v/refresh d-u) :d))))))
 
   (testing "No persisting of keywords"
-    (is (thrown? Throwable #"keyword" (g/transact! (v/create! {:a :a}))))))
+    (is (thrown? Throwable #"keyword" (g/transact! (v/create! {:a :a})))))
+  (g/shutdown)
+  )

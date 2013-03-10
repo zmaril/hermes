@@ -37,4 +37,5 @@
        (v/remove-property! a :a)
        (v/remove-property! c :a)
        (is (nil? (:a (v/prop-map a))))
-       (is (nil? (:a (v/prop-map a))))))))
+       (is (nil? (:a (v/prop-map a)))))))
+  (g/shutdown))

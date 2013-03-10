@@ -5,9 +5,6 @@
             [hermes.edge :as e]
             [hermes.vertex :as v]))
 
-
-;;TODO Figure out why these have to go in separte places compared to
-;;the vertexn_test.clj file
 (deftest test-edges
   (clear-db)
   (g/open conf)
