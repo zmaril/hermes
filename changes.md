@@ -1,4 +1,9 @@
 Changes 
+* Jan 15, 2013 - Bumped project number to 0.2.7. Prepping for Titan
+  0.3.0.
+  Switched testing over to embedded cassandra. Took out
+  InMemoryGraphs. Added in initial support for gremlin. Connect edges
+  by (connect! a :label b) now. Added in unique-upsert!/upconnect!.
 * Jan 15, 2013 - Bumped project number to 0.2.6. Titan to 0.2. 
 * Dec 17th, 2012 - Bumped project number to 0.2.6-SNAPSHOT. Titan to
   0.2-SNAPSHOT. No API changes. Watch out for a change in how Titan
