@@ -1,27 +1,29 @@
 (ns hermes.persistent.vertex-test
   (:use [clojure.test]
-        [hermes.persistent.conf :only (conf clear-db)])
+        [hermes.persistent.conf :only (clear-db conf)])
   (:require [hermes.core :as g]
             [hermes.vertex :as v]
             [hermes.type :as t]))
 
+
 ;;TODO Figure out why these have to go in separte places compared to
 ;;the edge_test.clj file
-(clear-db)
-(g/open conf)
-(g/transact!
- (t/create-vertex-key-once :name String {:indexed true})
- (t/create-vertex-key-once :age Long {:indexed true})
- (t/create-vertex-key-once :first-name String {:indexed true})
- (t/create-vertex-key-once :last-name String {:indexed true}))
-
 (deftest vertex-test
+  (clear-db)
+  (g/open conf)
+  (println (t/get-type :name))
+  
   (testing "Deletion of vertices"
-    (g/transact!  (let [u (v/create! {:name "uniquename"})
-                        u-id (v/get-id u)]
-                    (v/delete! u)
-                    (is (=  nil (v/find-by-id u-id)))
-                    (is (empty? (v/find-by-kv :name "uniquename"))))))
+    (g/transact!    
+     (t/create-vertex-key-once :name String {:indexed true})
+     (println (.hasIndex (t/get-type :name))))
+    
+    (g/transact!
+     (let [u (v/create! {:name "uniquename"})
+           u-id (v/get-id u)]
+       (v/delete! u)
+       (is (=  nil (v/find-by-id u-id)))
+       (is (empty? (v/find-by-kv :name "uniquename"))))))
   
   (testing "Simple property mutation" 
     (g/transact!
@@ -40,12 +42,12 @@
        (is (= 3   (v/get-property u :c))))))
 
   (testing "Property map"
-  (g/transact!
-   (let [v1 (v/create! {:name "v1" :a 1 :b 2 :c 3})
-         prop-map (v/prop-map v1)]
-     (is (= 1 (prop-map :a)))
-     (is (= 2 (prop-map :b)))
-     (is (= 3 (prop-map :c))))))
+    (g/transact!
+     (let [v1 (v/create! {:name "v1" :a 1 :b 2 :c 3})
+           prop-map (v/prop-map v1)]
+       (is (= 1 (prop-map :a)))
+       (is (= 2 (prop-map :b)))
+       (is (= 3 (prop-map :c))))))
 
   (testing "Find by single id"
     (g/transact!
@@ -65,6 +67,7 @@
 
   (testing "Find by kv"
     (g/transact!
+     (t/create-vertex-key-once :age Long {:indexed true})
      (let [v1 (v/create! {:age 1 :name "A"})
            v2 (v/create! {:age 2 :name "B"})
            v3 (v/create! {:age 2 :name "C"})]
@@ -75,6 +78,8 @@
 
   (testing "Upsert!"
     (g/transact!
+     (t/create-vertex-key-once :first-name String {:indexed true})
+     (t/create-vertex-key-once :last-name String {:indexed true})
      (let [v1-a (v/upsert! :first-name
                            {:first-name "Zack" :last-name "Maril" :age 21})
            v1-b (v/upsert! :first-name
@@ -90,11 +95,5 @@
               (v/get-property (v/refresh (first v1-a)) :heritage)
               (v/get-property (v/refresh (first v1-b)) :heritage)
               (v/get-property (v/refresh (first v2)) :heritage))))))
-
   (g/shutdown)
   (clear-db))
-
-
-
-
- 

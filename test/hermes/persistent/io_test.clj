@@ -1,19 +1,21 @@
-;; (ns hermes.memory.io-test
-;;   (:use clojure.test)
-;;   (:require [hermes.core :as g]
-;;             [hermes.io :as io]
-;;             [hermes.type :as t]
-;;             [hermes.vertex :as v]
-;;             [hermes.edge :as e]
-;;             [clojure.java.io :as clj-io]))
+(ns hermes.persistent.io-test
+  (:use clojure.test)
+  (:require [hermes.core :as g]
+            [hermes.io :as io]
+            [hermes.type :as t]
+            [hermes.vertex :as v]
+            [hermes.edge :as e]
+            [clojure.java.io :as clj-io]))
 
-;; (defn has-n-vertices [n]
-;;   (is (= n (count (seq (.getVertices g/*graph*))))))
+(defn has-n-vertices [n]
+  (is (= n (count (seq (.getVertices g/*graph*))))))
 
-;; (defn has-n-edges [n]
-;;   (is (= n (count (seq (.getEdges g/*graph*))))))
+(defn has-n-edges [n]
+  (is (= n (count (seq (.getEdges g/*graph*))))))
 
-;; (deftest test-loading-and-saving-graphs-graphml
+;;These tests will come back in 0.3.0 when we get access to g.V again. 
+;; (deftest io-test
+;;   (testing "Loading and saving graphs graphml"
 ;;   (g/open)
 ;;   (let [filename "my-test-graph.graphml"
 ;;         file (clj-io/file filename)]
@@ -32,6 +34,8 @@
 ;;       (has-n-edges 1)
 
 ;;       (delete-graph-file))))
+;;   )
+
 
 ;; (deftest test-loading-and-saving-graphs-gml
 ;;   (g/open)

@@ -25,7 +25,7 @@
 
 (defn shutdown 
   "Shutdown the graph."
-  [] (alter-var-root (var *graph*) (fn [m] (.shutdown m))))
+  [] (alter-var-root (var *graph*) (fn [m] (when m (.shutdown m)))))
 
 (defn get-features
   "Get a map of features for a graph.

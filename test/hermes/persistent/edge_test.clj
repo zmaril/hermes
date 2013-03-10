@@ -7,7 +7,7 @@
 
 
 ;;TODO Figure out why these have to go in separte places compared to
-;;the vertex_test.clj file
+;;the vertexn_test.clj file
 (deftest test-edges
   (clear-db)
   (g/open conf)
