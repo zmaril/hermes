@@ -1,4 +1,4 @@
-(ns hermes.persistent.core-test
+(ns hermes.persistent.core-test  
   (:use clojure.test
         [hermes.persistent.conf :only (conf clear-db)])
   (:require [hermes.core :as g]

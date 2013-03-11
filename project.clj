@@ -11,6 +11,8 @@
                  [commons-io/commons-io "2.2"]
                  [com.tinkerpop.gremlin/gremlin-java "2.2.0"]
                  [com.thinkaurelius.titan/titan "0.2.0"]]
-  :test-paths ["test" "src/test/hermes"] 
-  :profiles {:dev {:plugins [[lein-kibit "0.0.7"]]}})
+  :test-paths ["test" "src/test/hermes"]
+  :plugins [[zmaril/lein-test-bang-bang "0.2.0-SNAPSHOT"]]
+  :profiles {:dev {:plugins [[lein-kibit "0.0.7"]]}}
+  :aliases {"test!" ["do" "clean," "deps," "test!!"]})
 

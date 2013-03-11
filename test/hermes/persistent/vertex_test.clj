@@ -9,22 +9,22 @@
   (clear-db)
   (g/open conf)
   (g/transact!    
-   (t/create-vertex-key-once :vname String {:indexed true})
+   (t/create-vertex-key-once :name String {:indexed true})
    (t/create-vertex-key-once :age Long {:indexed true})
    (t/create-vertex-key-once :first-name String {:indexed true})
    (t/create-vertex-key-once :last-name String {:indexed true}))
   
   (testing "Deletion of vertices"    
     (g/transact!
-     (let [u (v/create! {:vname "uniquevname"})
+     (let [u (v/create! {:name "uniquename"})
            u-id (v/get-id u)]
        (v/delete! u)
        (is (=  nil (v/find-by-id u-id)))
-       (is (empty? (v/find-by-kv :vname "uniquevname"))))))
+       (is (empty? (v/find-by-kv :name "uniquename"))))))
   
   (testing "Simple property mutation" 
     (g/transact!
-     (let [u (v/create! {:vname "v1" :a 1 :b 1})]
+     (let [u (v/create! {:name "v1" :a 1 :b 1})]
        (v/set-property! u :b 2)
        (v/remove-property! u :a)
        (is (= 2   (v/get-property u :b)))
@@ -32,7 +32,7 @@
 
   (testing "Multiple property mutation"
     (g/transact!
-     (let [u (v/create! {:vname "v1" :a 0 :b 2})]
+     (let [u (v/create! {:name "v1" :a 0 :b 2})]
        (v/set-properties! u {:a 1 :b 2 :c 3})
        (is (= 1   (v/get-property u :a)))
        (is (= 2   (v/get-property u :b)))
@@ -40,7 +40,7 @@
 
   (testing "Property map"
     (g/transact!
-     (let [v1 (v/create! {:vname "v1" :a 1 :b 2 :c 3})
+     (let [v1 (v/create! {:name "v1" :a 1 :b 2 :c 3})
            prop-map (v/prop-map v1)]
        (is (= 1 (prop-map :a)))
        (is (= 2 (prop-map :b)))
@@ -64,13 +64,13 @@
 
   (testing "Find by kv"
     (g/transact!
-     (let [v1 (v/create! {:age 1 :vname "A"})
-           v2 (v/create! {:age 2 :vname "B"})
-           v3 (v/create! {:age 2 :vname "C"})]
+     (let [v1 (v/create! {:age 1 :name "A"})
+           v2 (v/create! {:age 2 :name "B"})
+           v3 (v/create! {:age 2 :name "C"})]
        (is (= #{"A"}
-              (set (map #(v/get-property % :vname) (v/find-by-kv :age 1)))))
+              (set (map #(v/get-property % :name) (v/find-by-kv :age 1)))))
        (is (= #{"B" "C"}
-              (set (map #(v/get-property % :vname) (v/find-by-kv :age 2))))))))
+              (set (map #(v/get-property % :name) (v/find-by-kv :age 2))))))))
 
   (testing "Upsert!"
     (g/transact!

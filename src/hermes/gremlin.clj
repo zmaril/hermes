@@ -1,5 +1,7 @@
 (ns hermes.gremlin
+  (:refer-clojure :exclude [iterate count])
   (:import (com.tinkerpop.gremlin.java GremlinPipeline)
+           (com.tinkerpop.pipes PipeFunction)
            (com.tinkerpop.gremlin Tokens$T)))
 
 
@@ -12,12 +14,16 @@
     ==   Tokens$T/eq
     !=   Tokens$T/neq  
     >=   Tokens$T/gte
+    >    Tokens$T/gt
     <=   Tokens$T/lte
-    <    Tokens$T/gt
-    >    Tokens$T/lt))
+    <    Tokens$T/lt))
 
 (defn keywords-to-labels [labels]
   (map name (filter identity labels)))
+
+(defn f-to-pipe [f]
+  (reify PipeFunction
+    (compute [_ arg] (f arg))))
 
 ;; GremlinPipeline<S,E>	_() 
 ;; Add an IdentityPipe to the end of the Pipeline.
@@ -42,6 +48,9 @@
 
 ;; GremlinPipeline<S,E>	as(String name) 
 ;; Wrap the previous step in an AsPipe.
+
+(defn as [p s]
+  (.as p s))
 
 ;; GremlinPipeline<S,?>	back(int numberedStep) 
 ;; Add a BackFilterPipe to the end of the Pipeline.
@@ -70,6 +79,9 @@
 ;; long	count() 
 ;; Return the number of objects iterated through the pipeline.
 
+(defn count [p]
+  (.count p))
+
 ;; GremlinPipeline<S,E>	dedup() 
 ;; Add a DuplicateFilterPipe to the end of the Pipeline.
 
@@ -80,6 +92,9 @@
 
 ;; GremlinPipeline<S,E>	except(Collection<E> collection) 
 ;; Add an ExceptFilterPipe to the end of the Pipeline.
+
+(defn except [p xs]
+  (.except p xs))
 
 ;; GremlinPipeline<S,?>	exhaustMerge() 
 ;; Add an ExhaustMergePipe to the end of the pipeline.
@@ -136,7 +151,7 @@
 
 (defmacro has
   ([p k v] `(.has ~p ~(name k) ~v))
-  ([p k c v] `(.has ~p ~(name k) ~(convert-symbol-to-token c) ~v)))
+  ([p k c v] `(.has ~p ~(name k) (convert-symbol-to-token '~c) ~v)))
 
 
 ;; GremlinPipeline<S,? extends com.tinkerpop.blueprints.Element>	hasNot(String key, Object value) 
@@ -280,6 +295,9 @@
 ;; GremlinPipeline<S,Object>	property(String key) 
 ;; Add a PropertyPipe to the end of the Pipeline.
 
+(defn property [p prop]
+  (.property p (name prop)))
+
 ;; GremlinPipeline<S,E>	random(Double bias) 
 ;; Add a RandomFilterPipe to the end of the Pipeline.
 
@@ -294,12 +312,13 @@
 
 ;; GremlinPipeline<S,com.tinkerpop.pipes.util.structures.Row>	select() 
 ;; Add a SelectPipe to the end of the Pipeline.
-
 ;; GremlinPipeline<S,com.tinkerpop.pipes.util.structures.Row>	select(Collection<String> stepNames, com.tinkerpop.pipes.PipeFunction... columnFunctions) 
 ;; Add a SelectPipe to the end of the Pipeline.
-
 ;; GremlinPipeline<S,com.tinkerpop.pipes.util.structures.Row>	select(com.tinkerpop.pipes.PipeFunction... columnFunctions) 
 ;; Add a SelectPipe to the end of the Pipeline.
+
+(defn select [p f]
+  (.select p (into-array PipeFunction [(f-to-pipe f)])))
 
 ;; GremlinPipeline<S,E>	sideEffect(com.tinkerpop.pipes.PipeFunction<E,?> sideEffectFunction) 
 ;; Add a SideEffectFunctionPipe to the end of the Pipeline.
@@ -347,10 +366,10 @@
 ;; List<E>	toList() 
 ;; Return a list of all the objects in the pipeline.
 
-(defn to-list [p]
+(defn into-vec [p]
   (seq (.toList p)))
 
-(defn to-set [p]
+(defn into-set [p]
   (set (.toList p)))
 
 ;; <T> GremlinPipeline<S,T>
