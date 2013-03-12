@@ -13,7 +13,6 @@
 
 (extend-type Element
   HermesElement
-
   (get-keys [this]
     (set (map keyword (.getPropertyKeys this))))
   
