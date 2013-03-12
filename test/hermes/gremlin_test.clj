@@ -1,4 +1,4 @@
-(ns hermes.persistent.gremlin-test
+(ns hermes.gremlin-test
   (:use [clojure.test]
         [hermes.persistent.conf :only (clear-db conf)])
   (:require [hermes.core :as g]

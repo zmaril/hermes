@@ -1,6 +1,6 @@
 (ns hermes.element
   (:import (com.tinkerpop.blueprints Element))
-  (require [hermes.kryo :as kryo]))
+  (:require [hermes.kryo :as kryo]))
 
 (defprotocol HermesElement
   "Tinkerpop element"

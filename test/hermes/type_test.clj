@@ -1,4 +1,4 @@
-(ns hermes.persistent.type-test
+(ns hermes..type-test
   (:use [clojure.test]
         [hermes.persistent.conf :only (clear-db conf)])
   (:require [hermes.type :as t]

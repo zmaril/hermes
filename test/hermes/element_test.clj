@@ -1,4 +1,4 @@
-(ns hermes.persistent.element-test
+(ns hermes.element-test
   (:use [clojure.test]
         [hermes.persistent.conf :only (conf clear-db)])
   (:import [com.thinkaurelius.titan.graphdb.relations RelationIdentifier])

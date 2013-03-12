@@ -1,4 +1,4 @@
-(ns hermes.persistent.conf
+(ns hermes.conf
   (:import (org.apache.commons.io FileUtils)))
 
 (def conf {:storage {:backend "embeddedcassandra"

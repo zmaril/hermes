@@ -1,4 +1,4 @@
-(ns hermes.persistent.io-test
+(ns hermes.io-test
   (:use clojure.test)
   (:require [hermes.core :as g]
             [hermes.io :as io]

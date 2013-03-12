@@ -1,4 +1,4 @@
-(ns hermes.persistent.kryo
+(ns hermes.kryo
   (:use [clojure.test])
   (:use [hermes.persistent.conf :only (conf clear-db)])
   (:require [hermes.core :as g]

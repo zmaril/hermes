@@ -1,4 +1,4 @@
-(ns hermes.persistent.vertex-test
+(ns hermes.vertex-test
   (:use [clojure.test]
         [hermes.persistent.conf :only (clear-db conf)])
   (:require [hermes.core :as g]
