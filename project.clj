@@ -1,6 +1,6 @@
-(defproject hermes "0.2.8"
+(defproject zmaril/hermes "0.2.8"
   :description "Embedded Titan Graph"
-  :url "https://github.com/gameclosure/hermes"
+  :url "https://github.com/zmaril/hermes"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :repositories [["typesafe/snapshots" "http://repo.typesafe.com/typesafe/snapshots/"]
@@ -9,7 +9,7 @@
                  ["oracle" "http://download.oracle.com/maven/"]]  
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [commons-io/commons-io "2.2"]
-                 [com.tinkerpop.gremlin/gremlin-java "2.2.0"]
+                 [zmaril/ogre "0.0.1"]
                  [com.thinkaurelius.titan/titan "0.2.0"]]
   :test-paths ["test" "src/test/hermes"]
   :plugins [[zmaril/lein-test-bang-bang "0.2.0-SNAPSHOT"]]

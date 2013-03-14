@@ -1,6 +1,6 @@
 (ns hermes.element-test
   (:use [clojure.test]
-        [hermes.persistent.conf :only (conf clear-db)])
+        [hermes.conf :only (conf clear-db)])
   (:import [com.thinkaurelius.titan.graphdb.relations RelationIdentifier])
   (:require [hermes.core :as g]
             [hermes.vertex :as v]

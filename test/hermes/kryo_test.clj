@@ -1,6 +1,6 @@
 (ns hermes.kryo
   (:use [clojure.test])
-  (:use [hermes.persistent.conf :only (conf clear-db)])
+  (:use [hermes.conf :only (conf clear-db)])
   (:require [hermes.core :as g]
             [hermes.edge :as e]
             [hermes.vertex :as v]

@@ -3,7 +3,7 @@
            (com.tinkerpop.gremlin.java GremlinPipeline))
   (:require [hermes.vertex :as v]
             [hermes.type   :as t]
-            [hermes.gremlin :as q])  
+            [ogre.core :as q])  
   (:use [hermes.core :only (*graph* transact! ensure-graph-is-transaction-safe)]
         [hermes.util :only (immigrate)]))
 

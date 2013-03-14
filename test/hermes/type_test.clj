@@ -1,6 +1,6 @@
 (ns hermes..type-test
   (:use [clojure.test]
-        [hermes.persistent.conf :only (clear-db conf)])
+        [hermes.conf :only (clear-db conf)])
   (:require [hermes.type :as t]
             [hermes.core :as g]))
 

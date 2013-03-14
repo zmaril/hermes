@@ -1,6 +1,6 @@
 (ns hermes.core-test  
   (:use clojure.test
-        [hermes.persistent.conf :only (conf clear-db)])
+        [hermes.conf :only (conf clear-db)])
   (:require [hermes.core :as g]
             [hermes.type :as t]
             [hermes.vertex :as v])

@@ -1,6 +1,6 @@
 (ns hermes.edge-test
   (:use [clojure.test]
-        [hermes.persistent.conf :only (clear-db conf)])
+        [hermes.conf :only (clear-db conf)])
   (:require [hermes.core :as g]
             [hermes.edge :as e]
             [hermes.vertex :as v]))
