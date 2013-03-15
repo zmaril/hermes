@@ -10,9 +10,10 @@
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [commons-io/commons-io "2.2"]
                  [zmaril/ogre "0.0.1"]
+                 [zmaril/archimedes "0.0.4"]
                  [com.thinkaurelius.titan/titan "0.2.0"]]
   :test-paths ["test" "src/test/hermes"]
-  :plugins [[zmaril/lein-test-bang-bang "0.2.0-SNAPSHOT"]]
+  :plugins [[lein-test-bang-bang "0.2.0"]]
   :profiles {:dev {:plugins [[lein-kibit "0.0.7"]]}}
   :aliases {"test!" ["do" "clean," "deps," "test!!"]})
 

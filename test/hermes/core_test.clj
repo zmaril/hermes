@@ -2,21 +2,22 @@
   (:use clojure.test
         [hermes.conf :only (conf clear-db)])
   (:require [hermes.core :as g]
+            [archimedes.core :as c]
             [hermes.type :as t]
             [hermes.vertex :as v])
   (:import  (com.thinkaurelius.titan.graphdb.database   StandardTitanGraph)
             (com.thinkaurelius.titan.graphdb.vertices   PersistStandardTitanVertex)))
 
-(clear-db)
-(g/open conf)
-
 (deftest test-vertices
+  (clear-db)
+  (g/open conf)
+
   (testing "Stored graph"
-    (is (= (type g/*graph*)
+    (is (= (type c/*graph*)
            StandardTitanGraph)))
 
   (testing "Stored graph"
-    (let [vertex (g/transact! (.addVertex g/*graph*))]      
+    (let [vertex (g/transact! (.addVertex c/*graph*))]      
       (is (= PersistStandardTitanVertex (type vertex)))))
 
   (testing "Stored graph"
@@ -44,9 +45,9 @@
 
         (is (= random-long
                (g/transact!
-                (v/get-property (v/refresh (first @f1)) :vertex-id))
+                (v/get (v/refresh (first @f1)) :vertex-id))
                (g/transact!
-                (v/get-property (v/refresh (first @f2)) :vertex-id))) "The futures have the correct values.")
+                (v/get (v/refresh (first @f2)) :vertex-id))) "The futures have the correct values.")
 
         (is (= 1 (count
                   (g/transact! (v/find-by-kv :vertex-id random-long))))
@@ -62,9 +63,9 @@
 
       (is (= random-long
              (g/transact!
-              (v/get-property (v/refresh (first @f1)) :vertex-id))
+              (v/get (v/refresh (first @f1)) :vertex-id))
              (g/transact!
-              (v/get-property (v/refresh (first @f2)) :vertex-id))) "The futures have the correct values.")
+              (v/get (v/refresh (first @f2)) :vertex-id))) "The futures have the correct values.")
 
       (is (= 1 (count
                 (g/transact! (v/find-by-kv :vertex-id random-long))))
