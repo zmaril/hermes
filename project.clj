@@ -1,4 +1,4 @@
-(defproject zmaril/hermes "0.2.8"
+(defproject zmaril/hermes "0.2.9"
   :description "Embedded Titan Graph"
   :url "https://github.com/zmaril/hermes"
   :license {:name "Eclipse Public License"
